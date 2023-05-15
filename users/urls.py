@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView, GetCollectionView, \
     GetCollectionItemView, CategoryAPIView, ItemAPIView, PreservationAPIView, CountryAPIView
 
@@ -16,5 +19,5 @@ urlpatterns = [
     path('item/', ItemAPIView.as_view()),
     path('preservations/', PreservationAPIView.as_view()),
     path('countries/', CountryAPIView.as_view()),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

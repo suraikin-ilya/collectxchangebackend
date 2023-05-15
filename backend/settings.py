@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'users'
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 COUNTRIES_API_URL = 'https://restcountries.com/v3.1/all'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'item_images')
+MEDIA_URL = '/media/'

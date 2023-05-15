@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from PIL import Image
 # Create your models here.
 
 class User(AbstractUser):
@@ -99,28 +100,35 @@ class Item(models.Model):
     id = models.AutoField(primary_key=True)
     owner = models.IntegerField()
     name = models.CharField(max_length=100)
-    category = models.CharField(max_length=50, default='',blank=True)
+    category = models.CharField(max_length=50, default='',blank=True, null=True)
     trade = models.BooleanField()
     visibility = models.BooleanField()
     date_create = models.DateField(auto_now_add=True)
     collection = models.IntegerField()
-    price = models.IntegerField(blank=True)
-    WWC = models.CharField(max_length=50, default='',blank=True)
-    CBRF = models.CharField(max_length=50, default='',blank=True)
-    catalog_number = models.CharField(max_length=50, default='',blank=True)
-    material = models.CharField(max_length=100,blank=True, default='')
-    year = models.IntegerField(blank=True, default='')
-    weight = models.FloatField(blank=True, default='')
-    preservation = models.CharField(max_length=50, default='',blank=True)
-    country = models.CharField(max_length=50, default='',blank=True)
-    obverse = models.ImageField(upload_to='item_images',blank=True)
-    reverse = models.ImageField(upload_to='item_images',blank=True)
-    extra_photo = models.ImageField(upload_to='item_images',blank=True)
+    price = models.IntegerField(blank=True, default=0, null=True)
+    WWC = models.CharField(max_length=50, default='',blank=True, null=True)
+    CBRF = models.CharField(max_length=50, default='',blank=True, null=True)
+    catalog_number = models.CharField(max_length=50, default='',blank=True, null=True)
+    material = models.CharField(max_length=100,blank=True, default='', null=True)
+    year = models.IntegerField(blank=True, default=0, null=True)
+    weight = models.FloatField(blank=True, default=0, null=True)
+    preservation = models.CharField(max_length=50, default='',blank=True, null=True)
+    country = models.CharField(max_length=50, default='',blank=True, null=True)
+    obverse = models.ImageField(upload_to='item_images/',blank=True, null=True)
+    reverse = models.ImageField(upload_to='item_images/',blank=True, null=True)
+    extra_photo = models.ImageField(upload_to='item_images/',blank=True, null=True)
     description = models.CharField(max_length=5000)
-    width = models.FloatField(blank=True)
-    height = models.FloatField(blank=True)
-    ISSN = models.CharField(max_length=50, default='',blank=True)
-    date_publish = models.DateField(blank=True)
+    width = models.FloatField(blank=True, default=0, null=True)
+    height = models.FloatField(blank=True, default=0, null=True)
+    ISSN = models.CharField(max_length=50, default='',blank=True, null=True)
+    date_publish = models.CharField(max_length=50, default='',blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        super(Item, self).save(*args, **kwargs)
+        if self.obverse:
+            image = Image.open(self.obverse.path)
+            # Дополнительная обработка изображения, если необходимо
+            # image.thumbnail((800, 600))  # Пример изменения размера изображения
+            image.save(self.obverse.path)
     def __str__(self):
         return self.name
