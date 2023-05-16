@@ -103,6 +103,7 @@ class Item(models.Model):
     category = models.CharField(max_length=50, default='',blank=True, null=True)
     trade = models.BooleanField()
     visibility = models.BooleanField()
+    market = models.BooleanField()
     date_create = models.DateField(auto_now_add=True)
     collection = models.IntegerField()
     price = models.IntegerField(blank=True, default=0, null=True)
