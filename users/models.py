@@ -123,6 +123,7 @@ class Item(models.Model):
     height = models.FloatField(blank=True, default=0, null=True)
     ISSN = models.CharField(max_length=50, default='',blank=True, null=True)
     date_publish = models.CharField(max_length=50, default='',blank=True, null=True)
+    views = models.IntegerField(blank=True, default='0', null=True)
 
     def save(self, *args, **kwargs):
         super(Item, self).save(*args, **kwargs)
