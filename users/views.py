@@ -138,6 +138,45 @@ class ItemListAPIView(generics.ListAPIView):
         queryset = super().get_queryset()
         return queryset.filter(collection=collection_id)
 
+class GetItemRetrieveAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            item = Item.objects.get(pk=pk)
+            serializer = ItemSerializer(item)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Item.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+class ItemDeleteAPIView(APIView):
+    def delete(self, request, pk):
+        try:
+            item = Item.objects.get(pk=pk)
+            item.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Item.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+class ToggleTradeAPIView(APIView):
+    def put(self, request, pk):
+        try:
+            item = Item.objects.get(pk=pk)
+            item.trade = not item.trade  # Переключаем значение trade
+            item.save()
+            serializer = ItemSerializer(item)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Item.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+class ToggleVisibilityAPIView(APIView):
+    def put(self, request, pk):
+        try:
+            item = Item.objects.get(pk=pk)
+            item.visibility = not item.visibility  # Переключаем значение trade
+            item.save()
+            serializer = ItemSerializer(item)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Item.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class PreservationAPIView(APIView):
     def get(self, request, format=None):
