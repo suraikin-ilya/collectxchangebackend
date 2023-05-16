@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import UserSerializer, CollectionSerializer, CategorySerializer, ItemSerializer, PreservationSerializer, CountrySerializer
 from rest_framework.response import Response
-from .models import User, Collection, Category, Preservation, Country
+from .models import User, Collection, Category, Preservation, Country, Item
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 from rest_framework import status
@@ -128,6 +128,15 @@ class ItemAPIView(APIView):
             item = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ItemListAPIView(generics.ListAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        collection_id = self.kwargs['collection_id']
+        queryset = super().get_queryset()
+        return queryset.filter(collection=collection_id)
 
 
 class PreservationAPIView(APIView):

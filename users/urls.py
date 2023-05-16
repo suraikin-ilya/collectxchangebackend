@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView, GetCollectionView, \
-    GetCollectionItemView, CategoryAPIView, ItemAPIView, PreservationAPIView, CountryAPIView
+    GetCollectionItemView, CategoryAPIView, ItemAPIView, PreservationAPIView, CountryAPIView, ItemListAPIView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -19,5 +19,6 @@ urlpatterns = [
     path('item/', ItemAPIView.as_view()),
     path('preservations/', PreservationAPIView.as_view()),
     path('countries/', CountryAPIView.as_view()),
+    path('items/collection/<int:collection_id>/', ItemListAPIView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
