@@ -156,6 +156,11 @@ class ItemDeleteAPIView(APIView):
         except Item.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+class CollectionItemCountAPIView(APIView):
+    def get(self, request, collection_id):
+        item_count = Item.objects.filter(collection=collection_id).count()
+        return Response({'item_count': item_count})
+
 class ToggleTradeAPIView(APIView):
     def put(self, request, pk):
         try:
