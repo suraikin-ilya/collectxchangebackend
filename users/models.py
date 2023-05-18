@@ -104,7 +104,7 @@ class Item(models.Model):
     trade = models.BooleanField()
     visibility = models.BooleanField()
     market = models.BooleanField()
-    date_create = models.DateField(auto_now_add=True)
+    date_create = models.DateTimeField(auto_now_add=True)
     collection = models.IntegerField()
     price = models.IntegerField(blank=True, default=0, null=True)
     WWC = models.CharField(max_length=50, default='',blank=True, null=True)
@@ -133,4 +133,7 @@ class Item(models.Model):
             # image.thumbnail((800, 600))  # Пример изменения размера изображения
             image.save(self.obverse.path)
     def __str__(self):
-        return self.name
+        return {
+            self.name,
+            self.date_create.strftime('%H:%M'),
+        }

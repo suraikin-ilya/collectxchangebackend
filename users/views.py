@@ -215,3 +215,9 @@ class IncreaseCollectionViewsAPIView(APIView):
             return Response({'message': 'Views increased successfully.'}, status=status.HTTP_200_OK)
         except Collection.DoesNotExist:
             return Response({'error': 'Item not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+class ItemListView(APIView):
+    def get(self, request):
+        items = Item.objects.order_by('-date_create')
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data)
