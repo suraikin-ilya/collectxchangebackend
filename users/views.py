@@ -195,3 +195,13 @@ class CountryAPIView(APIView):
         countries = Country.objects.all()
         serializer = CountrySerializer(countries, many=True)
         return Response(serializer.data)
+
+class IncreaseViewsAPIView(APIView):
+    def post(self, request, item_id):
+        try:
+            item = Item.objects.get(id=item_id)
+            item.views += 1
+            item.save()
+            return Response({'message': 'Views increased successfully.'}, status=status.HTTP_200_OK)
+        except Item.DoesNotExist:
+            return Response({'error': 'Item not found.'}, status=status.HTTP_404_NOT_FOUND)

@@ -5,7 +5,8 @@ from django.conf.urls.static import static
 
 from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView, GetCollectionView, \
     GetCollectionItemView, CategoryAPIView, ItemAPIView, PreservationAPIView, CountryAPIView, ItemListAPIView, \
-    ItemDeleteAPIView, ToggleTradeAPIView, ToggleVisibilityAPIView, GetItemRetrieveAPIView, CollectionItemCountAPIView
+    ItemDeleteAPIView, ToggleTradeAPIView, ToggleVisibilityAPIView, GetItemRetrieveAPIView, CollectionItemCountAPIView, \
+    IncreaseViewsAPIView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -26,5 +27,6 @@ urlpatterns = [
     path('items/<int:pk>/toggle-visibility/', ToggleVisibilityAPIView.as_view()),
     path('item/<int:pk>/', GetItemRetrieveAPIView.as_view()),
     path('item/count/<int:collection_id>/', CollectionItemCountAPIView.as_view()),
+    path('increase_item_views/<int:item_id>/', IncreaseViewsAPIView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
