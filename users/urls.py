@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView, GetCollectionView, \
     GetCollectionItemView, CategoryAPIView, ItemAPIView, PreservationAPIView, CountryAPIView, ItemListAPIView, \
     ItemDeleteAPIView, ToggleTradeAPIView, ToggleVisibilityAPIView, GetItemRetrieveAPIView, CollectionItemCountAPIView, \
-    IncreaseViewsAPIView
+    IncreaseViewsAPIView, IncreaseCollectionViewsAPIView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -28,5 +28,6 @@ urlpatterns = [
     path('item/<int:pk>/', GetItemRetrieveAPIView.as_view()),
     path('item/count/<int:collection_id>/', CollectionItemCountAPIView.as_view()),
     path('increase_item_views/<int:item_id>/', IncreaseViewsAPIView.as_view()),
+    path('increase_collection_views/<int:collection_id>/', IncreaseCollectionViewsAPIView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

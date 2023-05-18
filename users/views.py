@@ -205,3 +205,13 @@ class IncreaseViewsAPIView(APIView):
             return Response({'message': 'Views increased successfully.'}, status=status.HTTP_200_OK)
         except Item.DoesNotExist:
             return Response({'error': 'Item not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+class IncreaseCollectionViewsAPIView(APIView):
+    def post(self, request, collection_id):
+        try:
+            collection = Collection.objects.get(id=collection_id)
+            collection.views += 1
+            collection.save()
+            return Response({'message': 'Views increased successfully.'}, status=status.HTTP_200_OK)
+        except Collection.DoesNotExist:
+            return Response({'error': 'Item not found.'}, status=status.HTTP_404_NOT_FOUND)
