@@ -221,3 +221,12 @@ class ItemListView(APIView):
         items = Item.objects.order_by('-date_create')
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
+
+class GetOwner(APIView):
+    def get(self, request, item_owner):
+        try:
+            user = User.objects.get(id=item_owner)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
