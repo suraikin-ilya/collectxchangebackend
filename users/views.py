@@ -161,6 +161,12 @@ class CollectionItemCountAPIView(APIView):
         item_count = Item.objects.filter(collection=collection_id).count()
         return Response({'item_count': item_count})
 
+class CollectionByViewsAPIView(APIView):
+    def get(self, request):
+        collections = Collection.objects.order_by('-views')
+        serializer = CollectionSerializer(collections, many=True)
+        return Response(serializer.data)
+
 class ToggleTradeAPIView(APIView):
     def put(self, request, pk):
         try:
