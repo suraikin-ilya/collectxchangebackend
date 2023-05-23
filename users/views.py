@@ -236,3 +236,24 @@ class GetOwner(APIView):
             return Response(serializer.data)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+class VisibleItemsView(APIView):
+    def get(self, request):
+        items = Item.objects.filter(visibility=True)
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data)
+
+class VisibleItemsByOwnerView(APIView):
+    def get(self, request, owner_key):
+        items = Item.objects.filter(owner=owner_key, visibility=True)
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data)
+
+class UserIdView(APIView):
+    def get(self, request, nickname):
+        try:
+            user = User.objects.get(nickname=nickname)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
