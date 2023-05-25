@@ -7,7 +7,7 @@ from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView
     GetCollectionItemView, CategoryAPIView, ItemAPIView, PreservationAPIView, CountryAPIView, ItemListAPIView, \
     ItemDeleteAPIView, ToggleTradeAPIView, ToggleVisibilityAPIView, GetItemRetrieveAPIView, CollectionItemCountAPIView, \
     IncreaseViewsAPIView, IncreaseCollectionViewsAPIView, ItemListView, GetOwner, CollectionByViewsAPIView, \
-    VisibleItemsView, VisibleItemsByOwnerView, UserIdView
+    VisibleItemsView, VisibleItemsByOwnerView, UserIdView, TradeItemsByOwnerView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -36,5 +36,6 @@ urlpatterns = [
     path('visible_items/', VisibleItemsView.as_view()),
     path('visible_items/<int:owner_key>/', VisibleItemsByOwnerView.as_view()),
     path('user/<str:nickname>/', UserIdView.as_view()),
+    path('trade_items/<int:owner_key>/', TradeItemsByOwnerView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

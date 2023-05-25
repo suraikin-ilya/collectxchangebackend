@@ -257,3 +257,9 @@ class UserIdView(APIView):
             return Response(serializer.data)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=404)
+
+class TradeItemsByOwnerView(APIView):
+    def get(self, request, owner_key):
+        items = Item.objects.filter(owner=owner_key, visibility=True, trade=True)
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data)
