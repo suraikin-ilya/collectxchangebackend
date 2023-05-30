@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .serializers import UserSerializer, CollectionSerializer, CategorySerializer, ItemSerializer, PreservationSerializer, CountrySerializer
+from .serializers import UserSerializer, CollectionSerializer, CategorySerializer, ItemSerializer, PreservationSerializer, CountrySerializer, TradeSerializer
 from rest_framework.response import Response
 from .models import User, Collection, Category, Preservation, Country, Item
 from rest_framework.exceptions import AuthenticationFailed
@@ -263,3 +263,11 @@ class TradeItemsByOwnerView(APIView):
         items = Item.objects.filter(owner=owner_key, visibility=True, trade=True)
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
+
+class TradeAPIView(APIView):
+    def post(self, request):
+        serializer = TradeSerializer(data=request.data)
+        if serializer.is_valid():
+            trade = serializer.save()
+            return Response({'trade_id': trade.id}, status=201)
+        return Response(serializer.errors, status=400)

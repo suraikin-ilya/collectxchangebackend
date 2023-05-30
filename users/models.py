@@ -137,3 +137,13 @@ class Item(models.Model):
             self.name,
             self.date_create.strftime('%H:%M'),
         }
+
+class Trade(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_from = models.IntegerField()
+    user_to = models.IntegerField()
+    items_from = models.JSONField()
+    items_to = models.JSONField()
+    status = models.BooleanField(null=True)
+    message = models.CharField(max_length=500, default='',blank=True, null=True)
+    date_create = models.DateField(auto_now_add=True)

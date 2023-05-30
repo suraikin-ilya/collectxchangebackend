@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Collection, Category, Item, Preservation, Country
+from .models import User, Collection, Category, Item, Preservation, Country, Trade
 from rest_framework import generics
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,4 +79,9 @@ class PreservationSerializer(serializers.ModelSerializer):
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
+        fields = '__all__'
+
+class TradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trade
         fields = '__all__'
