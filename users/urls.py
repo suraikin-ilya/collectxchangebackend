@@ -7,7 +7,8 @@ from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView
     GetCollectionItemView, CategoryAPIView, ItemAPIView, PreservationAPIView, CountryAPIView, ItemListAPIView, \
     ItemDeleteAPIView, ToggleTradeAPIView, ToggleVisibilityAPIView, GetItemRetrieveAPIView, CollectionItemCountAPIView, \
     IncreaseViewsAPIView, IncreaseCollectionViewsAPIView, ItemListView, GetOwner, CollectionByViewsAPIView, \
-    VisibleItemsView, VisibleItemsByOwnerView, UserIdView, TradeItemsByOwnerView, TradeAPIView
+    VisibleItemsView, VisibleItemsByOwnerView, UserIdView, TradeItemsByOwnerView, TradeAPIView, TradeListAPIView, \
+    TradeToggleStatusFalseAPIView, TradeToggleStatusTrueAPIView, TradeCountAPIView, AllTradeListAPIView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -38,5 +39,10 @@ urlpatterns = [
     path('user/<str:nickname>/', UserIdView.as_view()),
     path('trade_items/<int:owner_key>/', TradeItemsByOwnerView.as_view()),
     path('trade/', TradeAPIView.as_view()),
+    path('trades/<int:userId>/', TradeListAPIView.as_view()),
+    path('trades/<int:trade_id>/toggle-true/', TradeToggleStatusTrueAPIView.as_view()),
+    path('trades/<int:trade_id>/toggle-false/', TradeToggleStatusFalseAPIView.as_view()),
+    path('trades/count/<int:userId>/', TradeCountAPIView.as_view()),
+    path('trades/all/<int:userId>/', AllTradeListAPIView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

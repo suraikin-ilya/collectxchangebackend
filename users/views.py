@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import UserSerializer, CollectionSerializer, CategorySerializer, ItemSerializer, PreservationSerializer, CountrySerializer, TradeSerializer
 from rest_framework.response import Response
-from .models import User, Collection, Category, Preservation, Country, Item
+from .models import User, Collection, Category, Preservation, Country, Item, Trade
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 from rest_framework import status
@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from rest_framework import generics
+from django.db.models import Q
 
 # Create your views here.
 class RegisterView(APIView):
@@ -271,3 +272,46 @@ class TradeAPIView(APIView):
             trade = serializer.save()
             return Response({'trade_id': trade.id}, status=201)
         return Response(serializer.errors, status=400)
+
+class TradeListAPIView(APIView):
+    def get(self, request, userId):
+        trades = Trade.objects.filter(user_to = userId)
+        serializer = TradeSerializer(trades, many=True)
+        return Response(serializer.data)
+
+class TradeToggleStatusTrueAPIView(APIView):
+    def put(self, request, trade_id):
+        try:
+            trade = Trade.objects.get(id=trade_id)
+            if trade.status is None:
+                trade.status = True  # Изменяем значение на 1 вместо 0
+                trade.save()
+                return Response({'message': 'Status toggled successfully.'})
+            else:
+                return Response({'message': 'Status is already set.'})
+        except Trade.DoesNotExist:
+            return Response({'message': 'Trade not found.'}, status=404)
+
+class TradeToggleStatusFalseAPIView(APIView):
+    def put(self, request, trade_id):
+        try:
+            trade = Trade.objects.get(id=trade_id)
+            if trade.status is None:
+                trade.status = False
+                trade.save()
+                return Response({'message': 'Status toggled successfully.'})
+            else:
+                return Response({'message': 'Status is already set.'})
+        except Trade.DoesNotExist:
+            return Response({'message': 'Trade not found.'}, status=404)
+
+class TradeCountAPIView(APIView):
+    def get(self, request, userId):
+        count = Trade.objects.filter(status__isnull=True, user_to=userId).count()
+        return Response({'trade_count': count})
+
+class AllTradeListAPIView(APIView):
+    def get(self, request, userId):
+        trades = Trade.objects.filter(Q(user_to=userId) | Q(user_from=userId))
+        serializer = TradeSerializer(trades, many=True)
+        return Response(serializer.data)
