@@ -12,6 +12,7 @@ from django.middleware.csrf import get_token
 from rest_framework import generics
 from django.db.models import Q
 from .pusher import pusher_client
+from django.utils import timezone
 
 # Create your views here.
 class RegisterView(APIView):
@@ -329,8 +330,10 @@ class MessageAPIView(APIView):
         chat = Chat(sender=sender, recipient=recipient, body=body)
         chat.save()
 
+        timestamp = chat.timestamp.timestamp()  # Получите метку времени в формате Unix
+
         # отправьте событие "new-message" на канал Pusher
-        pusher_client.trigger('chat', 'message', {'message': chat.body})
+        pusher_client.trigger('chat', 'new-message', {'message': chat.body, 'timestamp': timestamp, 'sender': chat.sender, 'recipient': chat.recipient})
 
         return JsonResponse({'status': 'success'})
 
@@ -341,6 +344,24 @@ class GetMessagesAPIView(APIView):
         messages = Chat.objects.filter(Q(sender=username) | Q(recipient=username))
 
         # преобразуйте сообщения в список словарей
+        messages_list = [
+            {
+                'sender': message.sender,
+                'recipient': message.recipient,
+                'body': message.body,
+                'timestamp': message.timestamp
+            }
+            for message in messages
+        ]
+
+        return JsonResponse({'messages': messages_list})
+
+class GetChatAPIView(APIView):
+    def get(self, request, username, another_username):
+        messages = Chat.objects.filter(
+            Q(sender=username, recipient=another_username) | Q(sender=another_username, recipient=username)
+        )
+
         messages_list = [
             {
                 'sender': message.sender,

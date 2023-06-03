@@ -9,7 +9,7 @@ from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView
     IncreaseViewsAPIView, IncreaseCollectionViewsAPIView, ItemListView, GetOwner, CollectionByViewsAPIView, \
     VisibleItemsView, VisibleItemsByOwnerView, UserIdView, TradeItemsByOwnerView, TradeAPIView, TradeListAPIView, \
     TradeToggleStatusFalseAPIView, TradeToggleStatusTrueAPIView, TradeCountAPIView, AllTradeListAPIView, MessageAPIView, \
-    GetMessagesAPIView
+    GetMessagesAPIView, GetChatAPIView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -47,5 +47,6 @@ urlpatterns = [
     path('trades/all/<int:userId>/', AllTradeListAPIView.as_view()),
     path('send-message', MessageAPIView.as_view()),
     path('messages/<str:username>/', GetMessagesAPIView.as_view()),
+    path('chat/<str:username>/<str:another_username>/', GetChatAPIView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
