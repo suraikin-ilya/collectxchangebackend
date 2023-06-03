@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import UserSerializer, CollectionSerializer, CategorySerializer, ItemSerializer, PreservationSerializer, CountrySerializer, TradeSerializer
 from rest_framework.response import Response
-from .models import User, Collection, Category, Preservation, Country, Item, Trade
+from .models import User, Collection, Category, Preservation, Country, Item, Trade, Chat
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 from rest_framework import status
@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from rest_framework import generics
 from django.db.models import Q
+from .pusher import pusher_client
 
 # Create your views here.
 class RegisterView(APIView):
@@ -315,3 +316,39 @@ class AllTradeListAPIView(APIView):
         trades = Trade.objects.filter(Q(user_to=userId) | Q(user_from=userId))
         serializer = TradeSerializer(trades, many=True)
         return Response(serializer.data)
+
+
+class MessageAPIView(APIView):
+    # получите данные из запроса (тело сообщения, получатель и т.д.)
+    def post(self, request):
+        body = request.data['body']
+        recipient = request.data['recipient']
+        sender = request.data['sender']
+
+        # создайте объект модели Chat и сохраните его в базу данных
+        chat = Chat(sender=sender, recipient=recipient, body=body)
+        chat.save()
+
+        # отправьте событие "new-message" на канал Pusher
+        pusher_client.trigger('chat', 'message', {'message': chat.body})
+
+        return JsonResponse({'status': 'success'})
+
+
+class GetMessagesAPIView(APIView):
+    # получите все сообщения, у которых sender или recipient равны username
+    def get(self, request, username):
+        messages = Chat.objects.filter(Q(sender=username) | Q(recipient=username))
+
+        # преобразуйте сообщения в список словарей
+        messages_list = [
+            {
+                'sender': message.sender,
+                'recipient': message.recipient,
+                'body': message.body,
+                'timestamp': message.timestamp
+            }
+            for message in messages
+        ]
+
+        return JsonResponse({'messages': messages_list})

@@ -8,7 +8,8 @@ from .views import RegisterView, LoginView, UserView, LogoutView, CollectionView
     ItemDeleteAPIView, ToggleTradeAPIView, ToggleVisibilityAPIView, GetItemRetrieveAPIView, CollectionItemCountAPIView, \
     IncreaseViewsAPIView, IncreaseCollectionViewsAPIView, ItemListView, GetOwner, CollectionByViewsAPIView, \
     VisibleItemsView, VisibleItemsByOwnerView, UserIdView, TradeItemsByOwnerView, TradeAPIView, TradeListAPIView, \
-    TradeToggleStatusFalseAPIView, TradeToggleStatusTrueAPIView, TradeCountAPIView, AllTradeListAPIView
+    TradeToggleStatusFalseAPIView, TradeToggleStatusTrueAPIView, TradeCountAPIView, AllTradeListAPIView, MessageAPIView, \
+    GetMessagesAPIView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -44,5 +45,7 @@ urlpatterns = [
     path('trades/<int:trade_id>/toggle-false/', TradeToggleStatusFalseAPIView.as_view()),
     path('trades/count/<int:userId>/', TradeCountAPIView.as_view()),
     path('trades/all/<int:userId>/', AllTradeListAPIView.as_view()),
+    path('send-message', MessageAPIView.as_view()),
+    path('messages/<str:username>/', GetMessagesAPIView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

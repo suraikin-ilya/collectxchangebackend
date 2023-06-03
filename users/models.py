@@ -146,4 +146,12 @@ class Trade(models.Model):
     items_to = models.JSONField()
     status = models.BooleanField(null=True)
     message = models.CharField(max_length=500, default='',blank=True, null=True)
-    date_create = models.DateField(auto_now_add=True)
+    date_create = models.DateTimeField(auto_now_add=True)
+
+class Chat(models.Model):
+    id = models.AutoField(primary_key=True)
+    sender = models.CharField(max_length=50)
+    recipient = models.CharField(max_length=50)
+    body = models.CharField(max_length=500, default='',blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
