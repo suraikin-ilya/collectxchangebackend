@@ -19,7 +19,17 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data.get("email")
+        if User.objects.filter(email=email).exists():
+            raise ValidationError({"email": ["Пользователь с таким email уже существует"]})
+
+        nickname = serializer.validated_data.get("nickname")
+        if User.objects.filter(nickname=nickname).exists():
+            raise ValidationError({"nickname": ["Данный nickname уже занят"]})
+
         serializer.save()
+
         return Response(serializer.data)
 
 class LoginView(APIView):
