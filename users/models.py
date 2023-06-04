@@ -8,6 +8,7 @@ class User(AbstractUser):
     nickname = models.CharField(max_length=255, unique=True)
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
 
 class Collection(models.Model):
     id = models.AutoField(primary_key=True)

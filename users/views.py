@@ -13,6 +13,7 @@ from rest_framework import generics
 from django.db.models import Q
 from .pusher import pusher_client
 from django.utils import timezone
+from django.http import HttpResponseBadRequest
 
 # Create your views here.
 class RegisterView(APIView):
@@ -27,6 +28,11 @@ class RegisterView(APIView):
         nickname = serializer.validated_data.get("nickname")
         if User.objects.filter(nickname=nickname).exists():
             raise ValidationError({"nickname": ["Данный nickname уже занят"]})
+
+        # Получение аватара из запроса
+        avatar = request.FILES.get('avatar')
+        if avatar:
+            serializer.validated_data['avatar'] = avatar
 
         serializer.save()
 
@@ -383,3 +389,13 @@ class GetChatAPIView(APIView):
         ]
 
         return JsonResponse({'messages': messages_list})
+
+
+class AvatarView(APIView):
+    def get(self, request, nickname):
+        user = get_object_or_404(User, nickname=nickname)
+        if not user.avatar:
+            return HttpResponseBadRequest("User has no avatar.")
+
+        avatar_url = user.avatar.url
+        return Response({"avatar_url": avatar_url})

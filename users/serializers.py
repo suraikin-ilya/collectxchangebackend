@@ -2,8 +2,9 @@ from rest_framework import serializers
 from .models import User, Collection, Category, Item, Preservation, Country, Trade, Chat
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
+        avatar = serializers.ImageField(required=False)
         model = User
-        fields = ['id', 'nickname', 'email', 'password', 'date_joined']
+        fields = ['id', 'nickname', 'email', 'password', 'date_joined', 'avatar']
         extra_kwargs = {
             'password':  {'write_only': True}
         }
