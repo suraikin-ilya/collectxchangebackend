@@ -101,7 +101,7 @@ class CollectionView(APIView):
     def post(self, request):
         serializer = CollectionSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner= request.data['owner'])
+            serializer.save(owner = request.data['owner'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -147,6 +147,27 @@ class ItemAPIView(APIView):
             item = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk, format=None):
+        try:
+            item = Item.objects.get(pk=pk)
+        except Item.DoesNotExist:
+            return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ItemSerializer(item, data=request.data, partial=True)
+        if serializer.is_valid():
+            item = serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk, format=None):
+        try:
+            item = Item.objects.get(pk=pk)
+        except Item.DoesNotExist:
+            return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ItemSerializer(item)
+        return Response(serializer.data)
 
 class ItemListAPIView(generics.ListAPIView):
     queryset = Item.objects.all()

@@ -22,6 +22,7 @@ urlpatterns = [
     path('collection/<int:id>/', GetCollectionItemView.as_view()),
     path('categories/', CategoryAPIView.as_view()),
     path('item/', ItemAPIView.as_view()),
+    path('item/<int:pk>/', ItemAPIView.as_view()),
     path('preservations/', PreservationAPIView.as_view()),
     path('countries/', CountryAPIView.as_view()),
     path('items/collection/<int:collection_id>/', ItemListAPIView.as_view()),
